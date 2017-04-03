@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lista de cliente</title>
+    <script src="react.js"></script>
+    <script src="react-dom.js"></script>
+    <script src="babel.min.js"></script>
+    <style>
+
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+             border: 1px solid black;
+             padding: 5px;
+        }
+    </style>
+  
+  </head>
+
+
+  <body>
+    <div id="container"></div>
+    
+    <script type="text/babel">
+      
+        class ItemLista extends React.Component {
+                constructor() {
+                super();
+                    this.state={items:[]};
+            }
+            componentDidMount(){
+                fetch('http://localhost:8080/clientes')
+                    .then(result=>result.json())
+                .then(items=>this.setState({items}))
+            }
+            render() {
+                return(
+                    <table>
+                        <tr>
+                            <th>Id</th><th>Nome</th><th>Endereço</th><th>Data</th>
+                        </tr>
+                    {                   
+                        this.state.items.length > 0 ?
+                            this.state.items.map(item=>
+                            <tr>
+                                <td>{item.id}</td>
+                                <td>{item.nome}</td>
+                                <td>{item.logradouro + ', ' + item.numero + ' - ' + item.complemento}</td>
+                                <td>{item.dataNascimento}</td>
+                            </tr>) 
+                            :
+                            <tr><td colSpan='4'>Não há dados</td></tr>
+                    
+                    }
+                    </table>
+                )
+            }
+        }
+
+        ReactDOM.render(<ItemLista />,document.getElementById('container'));
+
+    </script>
+  </body>
+</html>
